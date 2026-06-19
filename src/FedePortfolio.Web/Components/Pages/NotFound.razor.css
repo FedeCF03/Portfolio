@@ -1,0 +1,22 @@
+.not-found {
+  padding-block: var(--space-20);
+  text-align: left;
+}
+
+.not-found__code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-fg-subtle);
+  margin-bottom: var(--space-3);
+}
+
+.not-found h1 {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.035em;
+}
+
+.not-found p {
+  color: var(--color-fg-muted);
+  margin-bottom: var(--space-2);
+}

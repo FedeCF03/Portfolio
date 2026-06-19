@@ -1,0 +1,145 @@
+﻿@page "/"
+@inject FedePortfolio.Web.Services.SiteMetadata Meta
+@inject FedePortfolio.Web.Services.IGitHubService GitHub
+
+<PageTitle>@Meta.Name — @Meta.Role</PageTitle>
+
+<section class="hero" aria-labelledby="hero-title">
+  <h1 id="hero-title">@Meta.Name</h1>
+  <p class="hero__role">@Meta.Role</p>
+  <p class="hero__location">@Meta.Location</p>
+
+  <h2 class="hero__tagline">@Meta.Tagline</h2>
+  <p class="hero__description">@Meta.HeroDescription</p>
+
+  <p class="hero__cta">
+    <a href="/notes">Ver notas</a>
+  </p>
+</section>
+
+<hr />
+
+<section aria-labelledby="projects-title">
+  <h2 id="projects-title" class="section-title">Proyectos</h2>
+  <ul class="project-list">
+    @foreach (var project in Meta.Projects)
+    {
+      <li class="project">
+        <h3 class="project__name">
+          <a href="@project.Url" rel="noopener">@project.Name</a>
+        </h3>
+        <p class="project__description">@project.Description</p>
+        @if (!string.IsNullOrWhiteSpace(project.Stack))
+        {
+          <p class="project__stack">@project.Stack</p>
+        }
+      </li>
+    }
+  </ul>
+</section>
+
+<hr />
+
+<section aria-labelledby="experience-title">
+  <h2 id="experience-title" class="section-title">Experiencia</h2>
+  <ul class="experience-list">
+    @foreach (var item in Meta.Experiences)
+    {
+      <li class="experience">
+        <h3 class="experience__company">@item.Company</h3>
+        <p class="experience__role">@item.Role</p>
+        <p class="experience__period">@item.Period</p>
+        <p class="experience__description">@item.Description</p>
+        @if (!string.IsNullOrWhiteSpace(item.Stack))
+        {
+          <p class="experience__stack">@item.Stack</p>
+        }
+      </li>
+    }
+  </ul>
+</section>
+
+<hr />
+
+<section aria-labelledby="latest-title">
+  <h2 id="latest-title" class="section-title">Último trabajo</h2>
+  @if (myPulls is null)
+  {
+    <p class="state">Cargando pull requests…</p>
+  }
+  else if (myPulls.Count == 0)
+  {
+    <p class="state">No hay pull requests públicos para mostrar.</p>
+  }
+  else
+  {
+    <ul class="pr-list">
+      @foreach (var pr in myPulls)
+      {
+        <li class="pr">
+          <h3 class="pr__title">
+            <a href="@pr.Url" rel="noopener">@pr.Title</a>
+          </h3>
+          <p class="pr__meta">@pr.RepositoryFullName#@pr.Number</p>
+        </li>
+      }
+    </ul>
+    <p class="section-foot">
+      <a href="https://github.com/@Meta.GitHubUsername" rel="me">Ver en GitHub</a>
+    </p>
+  }
+</section>
+
+<hr />
+
+<section aria-labelledby="oss-title">
+  <h2 id="oss-title" class="section-title">Contribuciones OSS</h2>
+  @if (ossPulls is null)
+  {
+    <p class="state">Cargando contribuciones…</p>
+  }
+  else if (ossPulls.Count == 0)
+  {
+    <p class="state">Aún no hay contribuciones a proyectos de terceros.</p>
+  }
+  else
+  {
+    <ul class="pr-list">
+      @foreach (var pr in ossPulls)
+      {
+        <li class="pr">
+          <h3 class="pr__title">
+            <a href="@pr.Url" rel="noopener">@pr.Title</a>
+          </h3>
+          <p class="pr__meta">@pr.RepositoryFullName#@pr.Number</p>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+<hr />
+
+<section aria-labelledby="connect-title">
+  <h2 id="connect-title" class="section-title">Conectar</h2>
+  <ul class="social-list">
+    @foreach (var social in Meta.Socials)
+    {
+      <li class="social">
+        <span class="social__label">@social.Label</span>
+        <a href="@social.Url" rel="@social.Rel">@social.Handle</a>
+      </li>
+    }
+  </ul>
+</section>
+
+@code {
+    private IReadOnlyList<FedePortfolio.Web.Models.PullRequest>? myPulls;
+    private IReadOnlyList<FedePortfolio.Web.Models.PullRequest>? ossPulls;
+
+    protected override async Task OnInitializedAsync()
+    {
+        myPulls = await GitHub.GetMyPullRequestsAsync(10);
+        ossPulls = await GitHub.GetOssContributionsAsync(10);
+    }
+}

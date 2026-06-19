@@ -1,0 +1,38 @@
+﻿@inherits LayoutComponentBase
+@inject FedePortfolio.Web.Services.SiteMetadata Meta
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-name">@Meta.Name.ToLowerInvariant()</a>
+    <nav class="site-nav" aria-label="Principal">
+      <a href="/notes">notas</a>
+      <a href="https://github.com/@Meta.GitHubUsername" rel="me">github</a>
+      <a href="mailto:@Meta.Email">email</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="site-main">
+  <div class="container">
+    @Body
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <span class="site-footer__col">
+      v@(Meta.SiteVersion)
+      @if (!string.IsNullOrEmpty(Meta.CommitShort))
+      {
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/@Meta.GitHubUsername/fede-portfolio/commit/@Meta.CommitSha" rel="noopener">@Meta.CommitShort</a>
+      }
+    </span>
+    <span class="site-footer__col">
+      @if (Meta.LastModified is { } lm)
+      {
+        <text>last modified @lm.ToString("MMM d, yyyy")</text>
+      }
+    </span>
+  </div>
+</footer>
