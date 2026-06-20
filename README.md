@@ -6,9 +6,7 @@ Portfolio personal construido con **Blazor Web App** (.NET 10) y **Static SSR**.
 
 - **.NET 10** + Blazor Web App (Static SSR, sin interactividad de cliente)
 - **CSS puro** con design tokens en `wwwroot/app.css` y archivos `.razor.css` por componente
-- **Markdig** para renderizar notas en markdown
 - **YamlDotNet** para parsear frontmatter
-- **HttpClient** + **IMemoryCache** para integrarse con la API de GitHub (con caché de 30 min)
 - Sin JavaScript de cliente, sin WebAssembly, sin Tailwind
 
 ## Estructura
@@ -21,17 +19,12 @@ src/FedePortfolio.Web/
 │   ├── Layout/MainLayout.razor    # Header + main + footer
 │   └── Pages/
 │       ├── Home.razor             # /
-│       ├── Notes.razor            # /notes
-│       ├── NoteDetail.razor       # /notes/{slug}
 │       ├── NotFound.razor         # /not-found
 │       └── Error.razor            # /error
 ├── Services/
 │   ├── SiteMetadata.cs            # Datos del sitio
-│   ├── NotesService.cs            # Lee Content/notes/*.md
-│   ├── GitHubService.cs           # PRs propios + OSS via API
-│   ├── MarkdownRenderer.cs        # Markdig pipeline
 │   └── FrontmatterParser.cs       # YamlDotNet helper
-├── Models/                        # Note, PullRequest, Project, etc.
+├── Models/                    
 ├── Content/notes/                 # *.md con frontmatter
 └── wwwroot/
     ├── app.css                    # Design tokens + reset
