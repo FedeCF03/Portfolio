@@ -10,7 +10,6 @@ public sealed class SiteMetadata
     public required string Tagline { get; init; }
     public required string HeroDescription { get; init; }
     public required string Email { get; init; }
-    public required string GitHubUsername { get; init; }
     public required IReadOnlyList<Project> Projects { get; init; }
     public required IReadOnlyList<ExperienceItem> Experiences { get; init; }
     public required IReadOnlyList<SocialLink> Socials { get; init; }

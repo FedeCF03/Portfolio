@@ -7,11 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseStaticWebAssets();
 
 builder.Services.AddRazorComponents();
-builder.Services.AddMemoryCache();
-builder.Services.AddHttpClient<IGitHubService, GitHubService>();
-
-builder.Services.AddSingleton<MarkdownRenderer>();
-builder.Services.AddSingleton<INotesService, NotesService>();
 builder.Services.AddSingleton(sp => BuildSiteMetadata(sp, builder.Configuration, builder.Environment));
 
 var app = builder.Build();
@@ -86,13 +81,12 @@ static SiteMetadata BuildSiteMetadata(IServiceProvider sp, IConfiguration cfg, I
 
   return new SiteMetadata
   {
-    Name = "Federico Caltabiano Folino",
+    Name = "Federico Caltabiano",
     Role = "Estudiante Avanzado de Informática · Infraestructura, Redes & Backend",
     Location = "La Plata, Buenos Aires",
     Tagline = "Sistemas, redes e infraestructura.",
     HeroDescription = "Estudiante avanzado en la UNLP con foco en sistemas operativos, redes y desarrollo backend. Tengo experiencia práctica gestionando recursos, planificando proyectos independientes y resolviendo imprevistos bajo presión.",
     Email = "fedecf03@gmail.com",
-    GitHubUsername = "FedeCF03",
     Projects = projects,
     Experiences = experiences.OrderBy(e => e.SortOrder).ToList(),
     Socials = socials,
