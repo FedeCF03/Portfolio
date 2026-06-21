@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-  workflow_dispatch
+  workflow_dispatch: # <-- CORREGIDO: Se agregaron los dos puntos
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,11 +18,13 @@ jobs:
       with:
         dotnet-version: '10.0.x' 
 
+    # CORREGIDO: Se agregó 'src/' a la ruta del archivo del proyecto
     - name: Publish Blazor Project
-      run: dotnet publish FedePortfolio.Web/FedePortfolio.Web.csproj -c Release -o release
+      run: dotnet publish src/FedePortfolio.Web/FedePortfolio.Web.csproj -c Release -o release
 
+    # CORREGIDO: Se cambió 'FedePortfolio' por el nombre real de tu repo que es 'Portfolio'
     - name: Change base-href
-      run: sed -i 's/<base href="\/" \/>/<base href="\/FedePortfolio\/" \/>/g' release/wwwroot/index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/Portfolio\/" \/>/g' release/wwwroot/index.html
 
     - name: Copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
