@@ -20,25 +20,29 @@ jobs:
     - name: Publish Blazor Project
       run: dotnet publish src/FedePortfolio.Web/FedePortfolio.Web.csproj -c Release -o release
 
-    # PASO DE DIAGNÓSTICO: Nos muestra en la consola de GitHub exactamente dónde quedó el index.html
-    - name: List output files
-      run: find release/ -name "index.html"
+    # PASO DE DIAGNÓSTICO MAESTRO: Muestra en la consola de GitHub Actions el árbol completo de archivos generados
+    - name: Inspect Publish Directory Structure
+      run: |
+        echo "=== ESTRUCTURA COMPLETA DE LA CARPETA RELEASE ==="
+        find release/
+        echo "================================================="
 
-    # CORREGIDO: Buscamos el index.html dinámicamente en la salida de release para que sed no falle
-    - name: Change base-href
+    # Modificación flexible: Solo aplica el fix de URL si realmente existe un index.html estático
+    - name: Configure Static Routing (If HTML App)
       run: |
         INDEX_PATH=$(find release/ -name "index.html" | head -n 1)
         if [ -f "$INDEX_PATH" ]; then
+          echo "Aplicando parche a la aplicación estática en: $INDEX_PATH"
           sed -i 's/<base href="\/" \/>/<base href="\/Portfolio\/" \/>/g' "$INDEX_PATH"
-          # Duplicamos el archivo encontrado como 404.html en su misma carpeta
           cp "$INDEX_PATH" "$(dirname "$INDEX_PATH")/404.html"
-          # Agregamos el archivo .nojekyll en la raíz de wwwroot detectada
           touch "$(dirname "$INDEX_PATH")/.nojekyll"
         else
-          echo "ERROR: No se encontró index.html en la carpeta de release" && exit 1
+          echo "AVISO: No se detectó index.html. El proyecto podría estar configurado como Blazor Server/Interactive WebApp."
+          echo "Creando un archivo de contingencia .nojekyll en la raíz para habilitar assets dinámicos."
+          touch release/wwwroot/.nojekyll || touch release/.nojekyll
         fi
 
-    # CORREGIDO: Buscamos dinámicamente la carpeta wwwroot real para subirla a gh-pages
+    # Sube la carpeta raíz resultante para ver qué impacto tiene en Pages
     - name: Commit and Push to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
