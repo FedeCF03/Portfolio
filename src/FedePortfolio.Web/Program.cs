@@ -1,31 +1,16 @@
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using FedePortfolio.Web.Components;
 using FedePortfolio.Web.Models;
 using FedePortfolio.Web.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
 
-builder.WebHost.UseStaticWebAssets();
+builder.Services.AddSingleton(sp => BuildSiteMetadata(sp, builder.Configuration, builder.HostEnvironment));
 
-builder.Services.AddRazorComponents();
-builder.Services.AddSingleton(sp => BuildSiteMetadata(sp, builder.Configuration, builder.Environment));
+await builder.Build().RunAsync();
 
-var app = builder.Build();
-
-if (!app.Environment.IsDevelopment())
-{
-  app.UseExceptionHandler("/Error");
-  app.UseHsts();
-}
-
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-
-app.UseAntiforgery();
-app.MapStaticAssets();
-
-app.MapRazorComponents<App>();
-
-app.Run();
-static SiteMetadata BuildSiteMetadata(IServiceProvider sp, IConfiguration cfg, IHostEnvironment env)
+static SiteMetadata BuildSiteMetadata(IServiceProvider sp, IConfiguration cfg, IWebAssemblyHostEnvironment env)
 {
   var projects = new List<Project>
     {
@@ -74,10 +59,7 @@ static SiteMetadata BuildSiteMetadata(IServiceProvider sp, IConfiguration cfg, I
         new() { Label = "LinkedIn", Handle = "Federico Caltabiano", Url = "https://www.linkedin.com/in/federico-caltabiano/", Rel = "me" }
     };
 
-  var commit = Environment.GetEnvironmentVariable("GIT_COMMIT")
-                ?? cfg["Site:Commit"]
-                ?? env.ContentRootPath;
-  var lastMod = File.GetLastWriteTimeUtc(System.Reflection.Assembly.GetExecutingAssembly().Location);
+  var commit = cfg["Site:Commit"] ?? "local";
 
   return new SiteMetadata
   {
@@ -92,8 +74,6 @@ static SiteMetadata BuildSiteMetadata(IServiceProvider sp, IConfiguration cfg, I
     Socials = socials,
     SiteVersion = typeof(Program).Assembly.GetName().Version?.ToString() ?? "1.0.0",
     CommitSha = commit,
-    LastModified = lastMod
+    LastModified = null
   };
 }
-
-public partial class Program;
