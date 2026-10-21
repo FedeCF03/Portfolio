@@ -137,6 +137,26 @@ body {
   font-feature-settings: "ss01", "cv05", "cv11";
 }
 
+/* Sutil textura de papel sobre toda la página */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("noise.svg");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-color-scheme: dark) {
+  body::before {
+    opacity: 0.02;
+    mix-blend-mode: soft-light;
+  }
+}
+
 ::selection {
   background: var(--color-selection-bg);
   color: var(--color-selection-fg);
