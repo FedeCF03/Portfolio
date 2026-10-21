@@ -13,10 +13,12 @@ public sealed class SiteMetadata
     public required IReadOnlyList<Project> Projects { get; init; }
     public required IReadOnlyList<ExperienceItem> Experiences { get; init; }
     public required IReadOnlyList<SocialLink> Socials { get; init; }
+    public string CvPath { get; init; } = "Federico_Caltabiano.pdf";
     public string SiteVersion { get; init; } = "1.0.0";
     public string? CommitSha { get; init; }
     public DateTimeOffset? LastModified { get; init; }
 
     public string? CommitShort => CommitSha is { Length: >= 7 } sha ? sha[..7] : CommitSha;
+    public string ShortRole => Role.Split('·')[0].Trim();
     public string FormattedLastModified => LastModified?.ToString("MMM d, yyyy") ?? string.Empty;
 }

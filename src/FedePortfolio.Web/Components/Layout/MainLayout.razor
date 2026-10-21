@@ -1,37 +1,55 @@
 ﻿@inherits LayoutComponentBase
 @inject FedePortfolio.Web.Services.SiteMetadata Meta
 
-<header class="site-header">
-  <div class="container site-header__inner">
-    <a href="/" class="site-name">@Meta.Name.ToLowerInvariant()</a>
-    <nav class="site-nav" aria-label="Principal">
-      <a href="https://github.com/FedeCF03" rel="me">github</a>
-      <a href="mailto:@Meta.Email">email</a>
-    </nav>
-  </div>
-</header>
+<a class="skip-link" href="#main">Saltar al contenido</a>
 
-<main id="main" class="site-main">
-  <div class="container">
-    @Body
-  </div>
-</main>
+<div class="page">
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="./" class="brand" aria-label="Inicio, @Meta.Name">
+        <span class="brand__mark" aria-hidden="true">fc</span>
+        <span class="brand__name">@Meta.Name.ToLowerInvariant()</span>
+      </a>
 
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <span class="site-footer__col">
-      v@(Meta.SiteVersion)
-      @if (!string.IsNullOrEmpty(Meta.CommitShort))
-      {
-        <span aria-hidden="true">·</span>
-        <a href="https://github.com/FedeCF03/fede-portfolio/commit/@Meta.CommitSha" rel="noopener">@Meta.CommitShort</a>
-      }
-    </span>
-    <span class="site-footer__col">
-      @if (Meta.LastModified is { } lm)
-      {
-        <text>last modified @lm.ToString("MMM d, yyyy")</text>
-      }
-    </span>
-  </div>
-</footer>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="#proyectos">Proyectos</a>
+        <a href="#trayectoria">Trayectoria</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+      <a class="site-header__cta" href="@Meta.CvPath" download="Federico_Caltabiano_CV.pdf" type="application/pdf">
+        Descargar CV <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <div class="container">
+      @Body
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p class="site-footer__copy">© @DateTime.Now.Year @Meta.Name</p>
+      <div class="site-footer__meta">
+        <span>v@(Meta.SiteVersion)</span>
+        @if (Meta.CommitShort is { Length: >= 7 })
+        {
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/FedeCF03/fede-portfolio/commit/@Meta.CommitSha" rel="noopener">@Meta.CommitShort</a>
+        }
+        else if (!string.IsNullOrEmpty(Meta.CommitShort))
+        {
+          <span aria-hidden="true">·</span>
+          <span>@Meta.CommitShort</span>
+        }
+        @if (Meta.LastModified is { } lm)
+        {
+          <span aria-hidden="true">·</span>
+          <span>actualizado @lm.ToString("MMM yyyy")</span>
+        }
+      </div>
+    </div>
+  </footer>
+</div>

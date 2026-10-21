@@ -1,69 +1,179 @@
 ﻿@page "/"
 @inject FedePortfolio.Web.Services.SiteMetadata Meta
-<PageTitle>@Meta.Name — @Meta.Role</PageTitle>
+<PageTitle>@Meta.Name — @Meta.ShortRole</PageTitle>
 
 <section class="hero" aria-labelledby="hero-title">
-  <h1 id="hero-title">@Meta.Name</h1>
-  <p class="hero__role">@Meta.Role</p>
-  <p class="hero__location">@Meta.Location</p>
+  <p class="hero__eyebrow reveal">
+    <span class="hero__dot" aria-hidden="true"></span>
+    <span>La Plata, Buenos Aires</span>
+    <span class="hero__eyebrow-sep" aria-hidden="true">·</span>
+    <span>UTC−3</span>
+  </p>
 
-  <h2 class="hero__tagline">@Meta.Tagline</h2>
-  <p class="hero__description">@Meta.HeroDescription</p>
+  <h1 id="hero-title" class="hero__title reveal">
+    <span>Federico</span>
+    <em>Caltabiano</em>
+  </h1>
+
+  <div class="hero__grid">
+    <div class="hero__intro reveal">
+      <p class="hero__role">@Meta.Role</p>
+      <p class="hero__statement">@Meta.Tagline</p>
+      <p class="hero__description">@Meta.HeroDescription</p>
+
+      <div class="hero__actions">
+        <a class="button button--solid" href="#proyectos">
+          Ver proyectos
+          <span class="button__icon" aria-hidden="true">↓</span>
+        </a>
+        <a class="button button--ghost" href="@Meta.CvPath" download="Federico_Caltabiano_CV.pdf" type="application/pdf">
+          Descargar CV
+          <span class="button__icon" aria-hidden="true">↓</span>
+        </a>
+        <a class="hero__link" href="mailto:@Meta.Email">
+          Escribime
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <aside class="facts reveal" aria-label="Datos rápidos">
+      <dl class="facts__list">
+        <div class="facts__item">
+          <dt>Formación</dt>
+          <dd>Lic. en Informática, UNLP</dd>
+        </div>
+        <div class="facts__item">
+          <dt>Enfoque</dt>
+          <dd>Backend, sistemas paralelos y HPC</dd>
+        </div>
+        <div class="facts__item">
+          <dt>Stack</dt>
+          <dd>C# · .NET · Python · SQL · Docker · Linux · Git</dd>
+        </div>
+        <div class="facts__item">
+          <dt>Idiomas</dt>
+          <dd>Español nativo · Inglés técnico</dd>
+        </div>
+        <div class="facts__item">
+          <dt>Base</dt>
+          <dd>@Meta.Location</dd>
+        </div>
+        <div class="facts__item">
+          <dt>Contacto</dt>
+          <dd><a href="mailto:@Meta.Email">@Meta.Email</a></dd>
+        </div>
+      </dl>
+    </aside>
+  </div>
 </section>
 
-<hr />
+<section id="proyectos" class="section" aria-labelledby="projects-title">
+  <header class="section-head">
+    <span class="section-head__index" aria-hidden="true">01</span>
+    <h2 id="projects-title" class="section-head__title">Proyectos</h2>
+    <span class="section-head__meta">Trabajo seleccionado</span>
+  </header>
 
-<section aria-labelledby="projects-title">
-  <h2 id="projects-title" class="section-title">Proyectos</h2>
-  <ul class="project-list">
-    @foreach (var project in Meta.Projects)
+  <div class="projects">
+    @for (var i = 0; i < Meta.Projects.Count; i++)
     {
-      <li class="project">
-        <h3 class="project__name">
-          <a href="@project.Url" rel="noopener">@project.Name</a>
-        </h3>
-        <p class="project__description">@project.Description</p>
-        @if (!string.IsNullOrWhiteSpace(project.Stack))
-        {
-          <p class="project__stack">@project.Stack</p>
-        }
-      </li>
+      var project = Meta.Projects[i];
+      <article class="project">
+        <a class="project__link" href="@project.Url" rel="noopener" aria-label="Ver @project.Name">
+          <div class="project__top">
+            <span class="project__index">@($"{i + 1:00}")</span>
+            <span class="project__cta">Ver proyecto <span aria-hidden="true">↗</span></span>
+          </div>
+
+          <h3 class="project__name">@project.Name</h3>
+          <p class="project__description">@project.Description</p>
+
+          @if (!string.IsNullOrWhiteSpace(project.Stack))
+          {
+            <ul class="tags" aria-label="Stack">
+              @foreach (var tag in project.Stack.Split(','))
+              {
+                <li class="tag">@tag.Trim()</li>
+              }
+            </ul>
+          }
+        </a>
+      </article>
     }
-  </ul>
+  </div>
+
+  <p class="projects__more">
+    Más proyectos y experimentos en
+    <a href="https://github.com/FedeCF03" rel="me">GitHub <span aria-hidden="true">↗</span></a>
+  </p>
 </section>
 
-<hr />
+<section id="trayectoria" class="section" aria-labelledby="experience-title">
+  <header class="section-head">
+    <span class="section-head__index" aria-hidden="true">02</span>
+    <h2 id="experience-title" class="section-head__title">Trayectoria</h2>
+    <span class="section-head__meta">Formación &amp; experiencia</span>
+  </header>
 
-<section aria-labelledby="experience-title">
-  <h2 id="experience-title" class="section-title">Experiencia</h2>
-  <ul class="experience-list">
+  <ol class="timeline">
     @foreach (var item in Meta.Experiences)
     {
-      <li class="experience">
-        <h3 class="experience__company">@item.Company</h3>
-        <p class="experience__role">@item.Role</p>
-        <p class="experience__period">@item.Period</p>
-        <p class="experience__description">@item.Description</p>
-        @if (!string.IsNullOrWhiteSpace(item.Stack))
-        {
-          <p class="experience__stack">@item.Stack</p>
-        }
+      <li class="timeline__item">
+        <span class="timeline__rail" aria-hidden="true">
+          <span class="timeline__dot"></span>
+        </span>
+        <div class="timeline__content">
+          <div class="timeline__head">
+            <h3 class="timeline__role">@item.Role</h3>
+            <span class="timeline__period">@item.Period</span>
+          </div>
+          <p class="timeline__company">@item.Company</p>
+          <p class="timeline__description">@item.Description</p>
+
+          @if (!string.IsNullOrWhiteSpace(item.Stack))
+          {
+            <ul class="tags" aria-label="Stack">
+              @foreach (var tag in item.Stack.Split(','))
+              {
+                <li class="tag">@tag.Trim()</li>
+              }
+            </ul>
+          }
+        </div>
       </li>
     }
-  </ul>
+  </ol>
 </section>
 
-<hr />
+<section id="contacto" class="section" aria-labelledby="contact-title">
+  <header class="section-head">
+    <span class="section-head__index" aria-hidden="true">03</span>
+    <h2 id="contact-title" class="section-head__title">Contacto</h2>
+    <span class="section-head__meta">La Plata · UTC−3</span>
+  </header>
 
-<section aria-labelledby="connect-title">
-  <h2 id="connect-title" class="section-title">Conectar</h2>
-  <ul class="social-list">
-    @foreach (var social in Meta.Socials)
-    {
-      <li class="social">
-        <span class="social__label">@social.Label</span>
-        <a href="@social.Url" rel="@social.Rel">@social.Handle</a>
+  <div class="contact">
+    <p class="contact__lead">¿Tenés una idea?<br /><em>Hablemos.</em></p>
+
+    <ul class="contact__links">
+      <li>
+        <a class="contact__link contact__link--download" href="@Meta.CvPath" download="Federico_Caltabiano_CV.pdf" type="application/pdf">
+          <span class="contact__label">CV</span>
+          <span class="contact__handle">Descargar PDF</span>
+          <span class="contact__arrow" aria-hidden="true">↓</span>
+        </a>
       </li>
-    }
-  </ul>
+      @foreach (var social in Meta.Socials)
+      {
+        <li>
+          <a class="contact__link" href="@social.Url" rel="@social.Rel">
+            <span class="contact__label">@social.Label</span>
+            <span class="contact__handle">@social.Handle</span>
+            <span class="contact__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
 </section>

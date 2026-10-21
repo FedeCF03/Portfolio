@@ -1,22 +1,41 @@
 .not-found {
-  padding-block: var(--space-20);
-  text-align: left;
+  max-width: 40rem;
+  padding-block: clamp(3rem, 10vw, 7rem);
 }
 
 .not-found__code {
+  margin-bottom: 1.5rem;
+  color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-fg-subtle);
-  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
 }
 
 .not-found h1 {
-  font-size: var(--text-3xl);
-  margin-bottom: var(--space-4);
-  letter-spacing: -0.035em;
+  margin-bottom: 1.25rem;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
 }
 
-.not-found p {
+.not-found p:not(.not-found__code) {
+  max-width: 44ch;
   color: var(--color-fg-muted);
-  margin-bottom: var(--space-2);
+  line-height: var(--leading-relaxed);
+}
+
+.not-found__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid var(--color-border-strong);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.not-found__back:hover {
+  border-color: var(--color-accent);
 }

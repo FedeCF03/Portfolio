@@ -1,51 +1,46 @@
-# Federico Caltabiano Folino · Portfolio
+# Federico Caltabiano · Portfolio
 
-Portfolio personal construido con **Blazor Web App** (.NET 10) y **Static SSR**. Diseño brutalista/monocromático, CSS puro scoped por componente, contenido en markdown.
+Portfolio personal construido con **Blazor WebAssembly** (.NET 10) y **CSS puro**. Diseño editorial minimalista, tipografías self-hosted y modo claro/oscuro automático.
 
 ## Stack
 
-- **.NET 10** + Blazor Web App (Static SSR, sin interactividad de cliente)
+- **.NET 10** + Blazor WebAssembly
 - **CSS puro** con design tokens en `wwwroot/app.css` y archivos `.razor.css` por componente
-- **YamlDotNet** para parsear frontmatter
-- Sin JavaScript de cliente, sin WebAssembly, sin Tailwind
+- Tipografías self-hosted: **Instrument Serif** (display) e **Inter** (texto)
+- Sin frameworks de CSS, sin JS de cliente adicional y sin dependencias de CDNs
+
+## Diseño
+
+- Paleta cálida de papel y tinta con un acento terracota
+- Modo oscuro automático vía `prefers-color-scheme`
+- Jerarquía editorial: serif para títulos, sans para lectura y mono para metadatos
+- Microinteracciones y animaciones sutiles, respetando `prefers-reduced-motion`
+- Layout responsive sin JavaScript
+- Descarga del CV en PDF desde el header, el hero y el bloque de contacto
 
 ## Estructura
 
 ```
 src/FedePortfolio.Web/
 ├── Components/
-│   ├── App.razor                  # HTML shell + <head>
-│   ├── Routes.razor               # Router
+│   ├── App.razor                  # Router
 │   ├── Layout/MainLayout.razor    # Header + main + footer
 │   └── Pages/
 │       ├── Home.razor             # /
 │       ├── NotFound.razor         # /not-found
 │       └── Error.razor            # /error
+├── Models/                        # Proyectos, experiencia y links
 ├── Services/
 │   ├── SiteMetadata.cs            # Datos del sitio
-│   └── FrontmatterParser.cs       # YamlDotNet helper
-├── Models/                    
-├── Content/notes/                 # *.md con frontmatter
+│   └── FrontmatterParser.cs       # Helper de YAML
 └── wwwroot/
-    ├── app.css                    # Design tokens + reset
+    ├── app.css                    # Tokens, tipografías y reset
+    ├── fonts/                     # WOFF2 self-hosted
+    ├── Federico_Caltabiano.pdf    # CV descargable
     └── favicon.svg
 ```
 
-## Agregar una nota
-
-Crear un archivo `Content/notes/YYYY-MM-DD-slug.md`:
-
-```markdown
----
-title: "Título de la nota"
-date: 2026-06-19
-tags: [networking, linux]
----
-
-Contenido en markdown. Se renderiza con Markdig (soporta tablas, code blocks con highlighting, listas, blockquotes, etc.)
-```
-
-El slug se infiere del nombre del archivo y la fecha se toma del frontmatter (o del prefijo `YYYY-MM-DD` del nombre si no hay frontmatter).
+El contenido del portfolio (perfil, proyectos, experiencia y educación) se edita en `Program.cs`. El CV descargable se sirve desde `wwwroot/Federico_Caltabiano.pdf`.
 
 ## Ejecutar localmente
 
@@ -70,7 +65,7 @@ El output `publish/wwwroot/` es un sitio estático que se puede servir desde cua
 ## Deploy sugerido
 
 - **Cloudflare Pages** o **Netlify**: conectar el repo, build command `dotnet publish src/FedePortfolio.Web -c Release -o publish`, publish directory `publish/wwwroot`.
-- **GitHub Pages**: agregar un workflow que corra el publish y suba `wwwroot/` a la rama `gh-pages`.
+- **GitHub Pages**: el workflow ya publica `publish/wwwroot` en la rama `gh-pages` y ajusta el `base href` al subpath del repositorio.
 - **Azure Static Web Apps**: build command `dotnet publish`, artifact path `publish/wwwroot`.
 
 ## Licencia
