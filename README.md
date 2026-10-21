@@ -67,6 +67,7 @@ El output `publish/wwwroot/` es un sitio estático que se puede servir desde cua
 - **Cloudflare Pages** o **Netlify**: conectar el repo, build command `dotnet publish src/FedePortfolio.Web -c Release -o publish`, publish directory `publish/wwwroot`.
 - **GitHub Pages**: el workflow ya publica `publish/wwwroot` en la rama `gh-pages` y ajusta el `base href` al subpath del repositorio.
 - **Azure Static Web Apps**: build command `dotnet publish`, artifact path `publish/wwwroot`.
+- **VM de Azure / VPS**: ver [docs/DEPLOY_AZURE_VM.md](docs/DEPLOY_AZURE_VM.md) para montar el sitio con Nginx, HTTPS y actualizaciones.
 
 ## Licencia
 
